@@ -40,7 +40,7 @@ function buttons() {
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("blackjack")
-    .setDescription("Speel een potje blackjack"),
+    .setDescription("Play a game of blackjack"),
   async execute(interaction, client) {
     const deck = [];
     for (let suit of suits) {

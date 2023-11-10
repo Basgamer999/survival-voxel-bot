@@ -30,5 +30,5 @@ module.exports = async function (error, interaction, client) {
       error.stack.substring(0, 133).toString(),
     ],
   });
-  return "De bot heeft een error gekregen. \nDe owner van de bot is op de hoogte gebracht van de error en is opgeslagen in de database.";
+  return "The bot got a error please try again later.";
 };

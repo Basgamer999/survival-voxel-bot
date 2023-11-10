@@ -15,60 +15,45 @@ module.exports = {
     const target = interaction.options.getUser("target");
     const guild = client.guilds.cache.get(process.env.guildId);
     let user = guild.members.cache.get(target.id).user;
-    if (user.bot) return interaction.reply("Deze gebruiker is een bot.");
+    if (user.bot) return interaction.reply("This user is a bot.");
     const result =
       await mysql.custom(`SELECT COALESCE(users.id, games.id) AS id, games.*, users.*
-        FROM games
-        LEFT JOIN users ON games.id = users.id
-        WHERE users.id = ${user.id} OR games.id = ${user.id};`);
+      FROM games
+      LEFT JOIN users ON games.id = users.id COLLATE utf8mb4_general_ci
+      WHERE users.id = ${user.id} OR games.id = ${user.id};
+      `);
+      console.log(result)
     const embed = new EmbedBuilder()
-      .setTitle("Gebruikerinformatie")
+      .setTitle("Userinfo")
       .setAuthor({ name: user.username, iconURL: user.displayAvatarURL() })
       .setColor(process.env.color)
       .setThumbnail(user.displayAvatarURL());
     if (result.length == 0) {
-      embed.setDescription("Deze gebruiker heeft nog geen data.");
+      embed.setDescription("No data found.");
     } else {
-      const review = await mysql.select({
-        table: "review",
-        data: `WHERE user = ${user.id}`,
-      });
-      let reviews = "";
-      if (review.length !== 0) {
-        for (let i = 0; i < review.length; i++) {
-          let timestamp = `<t:${Math.floor(
-            new Date(review[i].timestamp) / 1000
-          )}:f>`;
-          reviews =
-            reviews + `<@${review[i].bij}>:${review[i].review}\n${timestamp}\n`;
-        }
-      } else {
-        reviews = "Geen reviews gevonden";
-      }
-      embed.setDescription(`Data van <@${user.id}>`);
+      embed.setDescription(`Data of <@${user.id}>`);
       embed.addFields({
-        name: "Over mij",
-        value: result[0].aboutMe || "Geen data gevonden",
+        name: "About me",
+        value: result[0].aboutMe || "No data found.",
       });
       if (result[0].birthday) {
         const birthday = new Date(result[0].birthday).toLocaleDateString(
           "en-GB"
         );
-        embed.addFields({ name: "Verjaardag!", value: birthday });
+        embed.addFields({ name: "Birthday", value: birthday });
       } else {
         embed.addFields({
-          name: "Verjaardag!",
-          value: "Geen verjaardag gevonden.",
+          name: "Birthday",
+          value: "No birthday found.",
         });
       }
-      embed.addFields({ name: "Review", value: reviews });
       embed.addFields({
-        name: "Tellen",
-        value: `Deze gebruiker heeft \`${result[0].count || 0}\` keer geteld`,
+        name: "Counting",
+        value: `This user has \`${result[0].count || 0}\` times counted.`,
       });
       embed.addFields({
         name: "2048",
-        value: `Hoogste score op 2048: \`${result[0].numberGame || 0}\``,
+        value: `Highest score on 2048: \`${result[0].numberGame || 0}\``,
       });
     }
     interaction.reply({ embeds: [embed] });

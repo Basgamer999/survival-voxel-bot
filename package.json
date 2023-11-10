@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "@discordjs/voice": "github:discordjs/voice",
     "@network-utils/tcp-ping": "^1.2.3",
     "canvas": "^2.11.2",
     "chess.js": "^1.0.0-beta.6",

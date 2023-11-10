@@ -11,7 +11,7 @@ function formatDateTime(dateTime) {
   const hour = dateTime.getHours().toString().padStart(2, "0");
   const minute = dateTime.getMinutes().toString().padStart(2, "0");
   const second = dateTime.getSeconds().toString().padStart(2, "0");
-  return `${day}-${month}-${year}-${hour}:${minute}:${second}`;
+  return `${day}-${month}-${year}-${hour};${minute};${second}`;
 }
 
 async function removeLastBackup(backupDirectory) {
