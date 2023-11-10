@@ -6,6 +6,7 @@ const {
 } = require("discord.js");
 const error = require("../../modules/error.js");
 
+let { currentPlayer, firstPlayer, secondPlayer } = "";
 async function buttons(gameboard, boardDisabled) {
   const row1 = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
@@ -64,10 +65,10 @@ async function buttons(gameboard, boardDisabled) {
 }
 async function msgGen(currentPlayer, firstPlayer, secondPlayer, won) {
   if (!won) {
-    let message = `<@${firstPlayer}> speelt tegen <@${secondPlayer}> \n<@${currentPlayer}> is aan de beurt.`;
+    let message = `<@${firstPlayer}> plays against <@${secondPlayer}> \n<@${currentPlayer}>'s turn.`;
     return message;
   } else {
-    let message = `<@${firstPlayer}> speelt tegen <@${secondPlayer}> \n${won} heeft gewonnen!`;
+    let message = `<@${firstPlayer}> plays against <@${secondPlayer}> \n<@${won}> Has won!`;
     return message;
   }
 }
@@ -91,11 +92,15 @@ function checkWin(gameboard) {
       gameboard[a] === gameboard[b] &&
       gameboard[a] === gameboard[c]
     ) {
-      return gameboard[a]; // Return the symbol of the winning player
+      if (gameboard[a] == "0") {
+        return secondPlayer; // returns the player who won
+      } else {
+        return firstPlayer; //returns the player who won
+      }
     }
   }
   if (!gameboard.includes("-")) {
-    return "Jammer niemand"; // Return "jammer niemand" for a draw
+    return "Nobody has won"; // Return "Nobody has won" if the gameboard is full
   }
 
   return false; // No winner
@@ -104,7 +109,7 @@ function checkWin(gameboard) {
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("tic-tac-toe")
-    .setDescription("Speel een potje tic-tac-toe"),
+    .setDescription("Play a game of tic-tac-toe"),
   async execute(interaction, client) {
     let gameboard = ["-", "-", "-", "-", "-", "-", "-", "-", "-"];
     let boardDisabled = [
@@ -119,7 +124,6 @@ module.exports = {
       false,
     ];
     let won = false;
-    let { currentPlayer, firstPlayer, secondPlayer } = "";
     firstPlayer = interaction.member.id;
     const button = new ButtonBuilder()
       .setCustomId("join ttt")
@@ -128,7 +132,7 @@ module.exports = {
 
     const message = await interaction.reply({
       components: [new ActionRowBuilder().addComponents(button)],
-      content: `<@${interaction.member.id}> speelt een potje tic-tac-toe druk Join! als je wilt joinen`,
+      content: `<@${interaction.member.id}> plays a game of tic-tac-toe. Press join! if you wish to join.`,
     });
 
     const collector = message.createMessageComponentCollector({
@@ -138,14 +142,13 @@ module.exports = {
       if (i.customId == "join ttt") {
         if (i.member.id == interaction.member.id) {
           i.reply({
-            content: "Je kan niet je eigen game joinen",
+            content: "You can't join your own game.",
             ephemeral: true,
           });
-          collector.resetTimer();
         } else {
           secondPlayer = i.member.id;
           i.reply({
-            content: `Welkom bij het potje tegen <@${interaction.member.id}>`,
+            content: `Welcome by a game of tic-tac-toe against <@${interaction.member.id}>`,
             ephemeral: true,
           });
           collector.resetTimer();
@@ -204,7 +207,7 @@ module.exports = {
           }
         } else {
           i.reply({
-            content: "Deze game is niet van jouw of je bent niet aan de beurt.",
+            content: "This is not your game or its not your turn.",
             ephemeral: true,
           });
         }
@@ -251,7 +254,7 @@ module.exports = {
           }
         } else {
           i.reply({
-            content: "Deze game is niet van jouw of je bent niet aan de beurt.",
+            content: "This is not your game or its not your turn.",
             ephemeral: true,
           });
         }
@@ -298,7 +301,7 @@ module.exports = {
           }
         } else {
           i.reply({
-            content: "Deze game is niet van jouw of je bent niet aan de beurt.",
+            content: "This is not your game or its not your turn.",
             ephemeral: true,
           });
         }
@@ -345,7 +348,7 @@ module.exports = {
           }
         } else {
           i.reply({
-            content: "Deze game is niet van jouw of je bent niet aan de beurt.",
+            content: "This is not your game or its not your turn.",
             ephemeral: true,
           });
         }
@@ -392,7 +395,7 @@ module.exports = {
           }
         } else {
           i.reply({
-            content: "Deze game is niet van jouw of je bent niet aan de beurt.",
+            content: "This is not your game or its not your turn.",
             ephemeral: true,
           });
         }
@@ -439,7 +442,7 @@ module.exports = {
           }
         } else {
           i.reply({
-            content: "Deze game is niet van jouw of je bent niet aan de beurt.",
+            content: "This is not your game or its not your turn.",
             ephemeral: true,
           });
         }
@@ -486,7 +489,7 @@ module.exports = {
           }
         } else {
           i.reply({
-            content: "Deze game is niet van jouw of je bent niet aan de beurt.",
+            content: "This is not your game or its not your turn.",
             ephemeral: true,
           });
         }
@@ -533,7 +536,7 @@ module.exports = {
           }
         } else {
           i.reply({
-            content: "Deze game is niet van jouw of je bent niet aan de beurt.",
+            content: "This is not your game or its not your turn.",
             ephemeral: true,
           });
         }
@@ -580,7 +583,7 @@ module.exports = {
           }
         } else {
           i.reply({
-            content: "Deze game is niet van jouw of je bent niet aan de beurt.",
+            content: "This is not your game or its not your turn.",
             ephemeral: true,
           });
         }
@@ -627,7 +630,7 @@ module.exports = {
           }
         } else {
           i.reply({
-            content: "Deze game is niet van jouw of je bent niet aan de beurt.",
+            content: "This is not your game or its not your turn.",
             ephemeral: true,
           });
         }
@@ -635,7 +638,7 @@ module.exports = {
     });
     collector.on("end", (collected, endReason) => {
       if (endReason == "time") {
-        interaction.editReply(`Sorry dit potje is getimeout`);
+        interaction.editReply(`This game has ended due to time out.`);
       }
     });
   },

@@ -5,16 +5,16 @@ const mysqlDateFormat = 'YYYY-MM-DD';
 const mysql = require('../../modules/mysql')
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("verjaardag")
-    .setDescription("Vul je verjaardag in!")
+    .setName("birhtday")
+    .setDescription("Fill in your birthday")
     .addStringOption((option) =>
       option
-        .setName("verjaardag")
-        .setDescription("Vul in je verjaardag! Format: dag-maand-jaar")
+        .setName("birthday")
+        .setDescription("Fill in your birthday Format: day-month-year")
         .setRequired(true)
     ),
   async execute(interaction) {
-    let birthday = interaction.options.getString("verjaardag");
+    let birthday = interaction.options.getString("birthday");
     const isValidDate = moment(birthday, dateFormat, true).isValid();
     if (isValidDate) {
         const mysqlDate = moment(birthday, dateFormat).format(mysqlDateFormat);
@@ -29,17 +29,17 @@ module.exports = {
                 data: [mysqlDate],
                 additionalData: `WHERE id = ${interaction.user.id}`
             })
-            interaction.reply(`Je verjaardag is geupdate naar ${birthday}`);
+            interaction.reply(`Your birthday is updated to: ${birthday}`);
         } else {
             mysql.insert({
                 table: 'users',
                 columns: ['id','birthday'],
                 data: [interaction.user.id,mysqlDate]
             })
-            interaction.reply(`Je verjaardag is toegevoegd op datum ${birthday}`);
+            interaction.reply(`Your birthday is added on date: ${birthday}`);
         }
       } else {
-        interaction.reply(`Dit is een invalid date. Vul de datum in als dag-maand-jaar`);
+        interaction.reply(`This is a invalid date, please use the format: day-month-year`);
       }
   },
 };

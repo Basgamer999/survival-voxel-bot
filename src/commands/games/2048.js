@@ -8,7 +8,7 @@ const {
   AttachmentBuilder,
 } = require("discord.js");
 const { createCanvas } = require("canvas");
-const mysql = require('../../modules/mysql');
+const mysql = require("../../modules/mysql");
 
 async function Embed(gameboard, score) {
   const embed = new EmbedBuilder()
@@ -205,9 +205,9 @@ module.exports = {
       components: [buttons],
       embeds: [embed],
       files: [gameboardImage],
-      fetchReply: true
+      fetchReply: true,
     });
-    const user = interaction.member.id
+    const user = interaction.member.id;
     const collector = message.createMessageComponentCollector({});
     collector.on("collect", async (i) => {
       if (i.member.id == user) {
@@ -298,21 +298,22 @@ module.exports = {
         table: "games",
         data: `WHERE id = ${user} LIMIT 1`,
       });
-      if (result[0].numberGame < score) {
-        if (result.length >= 1) {
+      console.log(result);
+      if (result.length >= 1) {
+        if (result[0].numberGame < score) {
           mysql.update({
             table: "games",
             column: ["numberGame"],
             data: [score],
             additionalData: `WHERE id = ${user}`,
           });
-        } else {
-          await mysql.insert({
-            table: "games",
-            columns: ["id", "2048"],
-            data: [user, score],
-          });
         }
+      } else {
+        await mysql.insert({
+          table: "games",
+          columns: ["id", "numberGame"],
+          data: [user, score],
+        });
       }
     });
   },
