@@ -27,7 +27,6 @@ module.exports = {
       RIGHT JOIN users ON games.id = users.id
       WHERE games.id = ${user.id} OR users.id = ${user.id}     
       `);
-    console.log(result);
     const embed = new EmbedBuilder()
       .setTitle("Userinfo")
       .setAuthor({ name: user.username, iconURL: user.displayAvatarURL() })

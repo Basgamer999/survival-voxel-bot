@@ -19,6 +19,8 @@ module.exports = {
           if (message.content == counter && message.author.id !== user) {
             if (message.content == 100) {
               message.react("💯");
+            } else if (message.content == 69) {
+              message.react("😉");
             } else {
               message.react("✅");
             }
