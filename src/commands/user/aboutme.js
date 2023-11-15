@@ -6,16 +6,16 @@ const {
 const mysql = require("../../modules/mysql");
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("overmij")
-    .setDescription("Vul in over Mij")
+    .setName("aboutme")
+    .setDescription("Fill in your aboutme")
     .addStringOption((option) =>
       option
-        .setName("overmij")
-        .setDescription("Je over mij")
+        .setName("aboutme")
+        .setDescription("Fill in your aboutme")
         .setRequired(true)
     ),
   async execute(interaction) {
-    let about = interaction.options.getString("overmij");
+    let about = interaction.options.getString("aboutme");
     let result = await mysql.select({
       table: "users",
       data: `WHERE id = ${interaction.user.id}`,
@@ -27,14 +27,14 @@ module.exports = {
         data: [about],
         additionalData: `WHERE id = ${interaction.user.id}`,
       });
-      interaction.reply(`Je aboutMe is geupdate`);
+      interaction.reply({content:`Your aboutme has been updated`, ephemeral: true});
     } else {
       mysql.insert({
         table: "users",
         columns: ["id", "aboutMe"],
         data: [interaction.user.id, about],
       });
-      interaction.reply(`Je about me is toegevoegd`);
+      interaction.reply({content: `Your aboutme has been added.`, ephemeral: true});
     }
   },
 };

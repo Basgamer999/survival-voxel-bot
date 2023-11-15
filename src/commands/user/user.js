@@ -4,11 +4,11 @@ const mysql = require("../../modules/mysql");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("user")
-    .setDescription("Zoek een user op")
+    .setDescription("Find a user")
     .addUserOption((option) =>
       option
         .setName("target")
-        .setDescription("De persoon die je wilt bekijken.")
+        .setDescription("The person you want to find.")
         .setRequired(true)
     ),
   async execute(interaction, client) {

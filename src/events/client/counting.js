@@ -48,7 +48,7 @@ module.exports = {
             });
           } else {
             message.react("❌");
-            message.reply("Gefaald, Volgend getal is 1");
+            message.reply("Failed, next number is 1");
             if (result[0].record < counter) {
               mysql.update({
                 table: "counting",
@@ -75,12 +75,12 @@ module.exports = {
             });
           } else {
             message.react("❌");
-            message.reply("Gefaald, Volgend getal is 1");
+            message.reply("Failed, next number is 1");
           }
         }
       }
       const end = new Date();
-      log.debug(`counting duurde ${end - start}ms`);
+      log.debug(`counting took ${end - start}ms`);
       global.lastExecute = new Date();
       client.user.setStatus("online");
     }
