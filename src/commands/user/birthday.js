@@ -29,17 +29,17 @@ module.exports = {
                 data: [mysqlDate],
                 additionalData: `WHERE id = ${interaction.user.id}`
             })
-            interaction.reply(`Your birthday is updated to: ${birthday}`);
+            interaction.reply({content: `Your birthday is updated to: ${birthday}`, ephemeral: true});
         } else {
             mysql.insert({
                 table: 'users',
                 columns: ['id','birthday'],
                 data: [interaction.user.id,mysqlDate]
             })
-            interaction.reply(`Your birthday is added on date: ${birthday}`);
+            interaction.reply({content: `Your birthday is added on date: ${birthday}`, ephemeral: true});
         }
       } else {
-        interaction.reply(`This is a invalid date, please use the format: day-month-year`);
+        interaction.reply({content:`This is a invalid date, please use the format: day-month-year`, ephemeral: true});
       }
   },
 };
