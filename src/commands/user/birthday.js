@@ -5,7 +5,7 @@ const mysqlDateFormat = 'YYYY-MM-DD';
 const mysql = require('../../modules/mysql')
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("birhtday")
+    .setName("birthday")
     .setDescription("Fill in your birthday")
     .addStringOption((option) =>
       option

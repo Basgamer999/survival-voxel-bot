@@ -40,7 +40,6 @@ async function insert({ table, columns, data }) {
   const columnList = columns.join(", ");
   const values = data.map((value) => mysql.escape(value)).join(", ");
   const query = `INSERT INTO ${table} (${columnList}) VALUES (${values})`;
-  console.log(query);
   const start = new Date();
   pool.query(query, (error, results) => {
     const end = new Date();
