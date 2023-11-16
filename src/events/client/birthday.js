@@ -6,7 +6,7 @@ module.exports = {
   name: "ready",
   once: true,
   async execute(client) {
-    let scheduledMessage = new cron.CronJob("* * * * *", async () => {
+    let scheduledMessage = new cron.CronJob("0 9 * * *", async () => {
         const date = new Date();
         const day = date.getDate();
         const month = date.getMonth()+1;

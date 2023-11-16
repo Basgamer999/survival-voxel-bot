@@ -44,8 +44,8 @@ module.exports = {
             }
             mysql.update({
               table: "counting",
-              column: ["user", "counter"],
-              data: [message.author.id, counter + 1],
+              column: ["user", "counter","LastMessageID"],
+              data: [message.author.id, counter + 1, message.id],
               additionalData: `WHERE counter = ${counter}`,
             });
           } else {

@@ -24,7 +24,7 @@ module.exports = {
         errorLog(error, interaction, client);
         await interaction.reply({
           content:
-            "Er is een error opgetreden sorry voor het ongemak. \nBas is hier over geinformeerd en zou het proberen het probleem op te lossen",
+            "There has been a error in the command please try again later.",
           ephemeral: true,
         });
       }
