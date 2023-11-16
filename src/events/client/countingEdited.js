@@ -4,6 +4,7 @@ module.exports = {
   name: "messageUpdate",
   once: false,
   async execute(message, client) {
+    if (message.channel.id !== process.env.countingChannelId) return;
     const result = await mysql.select({
       table: "counting",
     });
