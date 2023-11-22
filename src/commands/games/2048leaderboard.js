@@ -24,44 +24,44 @@ function generateButton(page) {
 }
 
 function generateLeaderboard(result, page) {
-  let count = 0;
-  for (let x = 1; x < result.length + 1; x++) {
-    count = count + result[x - 1].count;
-  }
+  // Sort the result array numerically based on the numberGame property
+  result.sort((a, b) => {
+    return (parseInt(b.numberGame) || 0) - (parseInt(a.numberGame) || 0);
+  });
+
   let leaderboard = "";
   for (let i = 1 + page * 10 - 10; i < 11 + page * 10 - 10; i++) {
     let id =
-      result[i - 1] && result[i - 1].id !== undefined
+      result[i - 1] &&
+      result[i - 1].id !== undefined &&
+      result[i - 1].numberGame !== null
         ? `<@${result[i - 1].id}>`
         : "-";
     let userCount =
-      result[i - 1] && result[i - 1].count !== undefined
-        ? result[i - 1].count
+      result[i - 1] &&
+      result[i - 1].numberGame !== undefined &&
+      result[i - 1].numberGame !== null
+        ? result[i - 1].numberGame
         : "-";
-    let procent =
-      !isNaN(userCount) && !isNaN(count) && count !== 0
-        ? ((userCount / count) * 100).toFixed(2)
-        : 0;
-    leaderboard = leaderboard + `${i}. ${id}:${userCount} (${procent}%)\n`;
+    leaderboard = leaderboard + `${i}. ${id}:${userCount}\n`;
   }
-  leaderboard = leaderboard + `\nTotal counted:${count}`;
   return leaderboard;
 }
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("counter-leaderboard")
-    .setDescription("Get the leaderboard of who counted the most"),
+    .setName("2048-leaderboard")
+    .setDescription("Get the leaderboard of who has the highest score in 2048"),
   async execute(interaction, client) {
     const result = await mysql.select({
       table: "games",
-      data: "ORDER BY count DESC",
+      data: "ORDER BY numberGame DESC",
     });
     let page = 1;
     let leaderboard = generateLeaderboard(result, page);
     const row = generateButton(page);
     const embed = new EmbedBuilder()
-      .setTitle("Counterleaderboard")
+      .setTitle("2048 leaderboard")
       .setDescription(`page ${page}/5`)
       .addFields({ name: "Leaderboard", value: leaderboard })
       .setColor(process.env.color);
@@ -78,7 +78,7 @@ module.exports = {
         let leaderboard = generateLeaderboard(result, page);
         const row = generateButton(page);
         const embed = new EmbedBuilder()
-          .setTitle("Counterleaderboard")
+          .setTitle("2048 leaderboardd")
           .setDescription(`page ${page}/5`)
           .addFields({ name: "Leaderboard", value: leaderboard })
           .setColor(process.env.color);
