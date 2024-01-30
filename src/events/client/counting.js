@@ -51,6 +51,24 @@ module.exports = {
           } else {
             message.react("❌");
             message.reply("Failed, next number is 1");
+            let user = await mysql.select({
+              table: "games",
+              data: `WHERE id = ${message.author.id} LIMIT 1`,
+            });
+            if (user.length >= 1) {
+              mysql.update({
+                table: "games",
+                column: ["fails"],
+                data: [Number(user[0].fails) + 1],
+                additionalData: `WHERE id = ${user[0].id}`,
+              });	
+            } else {
+              await mysql.insert({
+                table: "games",
+                columns: ["id", "fails"],
+                data: [message.author.id, 1],
+              });
+            }
             if (result[0].record < counter) {
               mysql.update({
                 table: "counting",

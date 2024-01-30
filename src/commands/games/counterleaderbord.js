@@ -38,11 +38,12 @@ function generateLeaderboard(result, page) {
       result[i - 1] && result[i - 1].count !== undefined
         ? result[i - 1].count
         : "-";
+    let fails = result[i - 1] && result[i - 1].fails !== undefined ? result[i - 1].fails : "-";
     let procent =
       !isNaN(userCount) && !isNaN(count) && count !== 0
         ? ((userCount / count) * 100).toFixed(2)
         : 0;
-    leaderboard = leaderboard + `${i}. ${id}:${userCount} (${procent}%)\n`;
+    leaderboard = leaderboard + `${i}. ${id}:${userCount} (${procent}%) Fails: ${fails}\n`;
   }
   leaderboard = leaderboard + `\nTotal counted:${count}`;
   return leaderboard;
